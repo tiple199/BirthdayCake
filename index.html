@@ -66,42 +66,54 @@
             height: '315',
             width: '560',
             videoId: 'BqbF2W0gwyg', // ID của video bạn muốn phát
+            // playerVars: {
+            //     'autoplay': 0, // Tắt tự động phát khi tải trang
+            //     'controls': 1, // Hiện các nút điều khiển
+            //     'loop': 1, // Tự động lặp lại
+            //     'playlist': 'BqbF2W0gwyg' // Cần thiết cho chức năng loop
+            // }
             playerVars: {
-                'autoplay': 0, // Tắt tự động phát khi tải trang
-                'controls': 1, // Hiện các nút điều khiển
-                'loop': 1, // Tự động lặp lại
-                'playlist': 'BqbF2W0gwyg' // Cần thiết cho chức năng loop
-            }
+    'autoplay': 0,
+    'controls': 1
+}
         });
     }
 
-    // Hàm đóng modal và dừng video
-    function closeModalAndStopVideo() {
-        if (player && typeof player.stopVideo === 'function') {
-            player.stopVideo(); // Dừng video
+    
+
+// Hàm này được API của YouTube tự động gọi khi đã sẵn sàng
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('youtube-player', {
+        height: '315',
+        width: '560',
+        videoId: 'BqbF2W0gwyg', // ID của video bạn muốn phát
+        playerVars: {
+            'autoplay': 0,
+            'controls': 1
         }
+    });
+}
+
+// Khi bấm nút "Click me"
+btn.onclick = function() {
+    modal.style.display = "block";
+    // Chỉ phát nhạc nếu nó chưa được phát hoặc đã kết thúc
+    if (player && typeof player.getPlayerState === 'function' && player.getPlayerState() !== 1) {
+         player.playVideo();
+    }
+}
+
+// Khi bấm nút (x) để đóng, chỉ đóng modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Khi bấm ra ngoài để đóng, chỉ đóng modal
+window.onclick = function(event) {
+    if (event.target == modal) {
         modal.style.display = "none";
     }
-
-    // Khi bấm nút "Click me"
-    btn.onclick = function() {
-        modal.style.display = "block";
-        if (player && typeof player.playVideo === 'function') {
-            player.playVideo(); // Phát video
-        }
-    }
-
-    // Khi bấm nút (x) để đóng
-    span.onclick = function() {
-        closeModalAndStopVideo();
-    }
-
-    // Khi bấm ra ngoài để đóng
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            closeModalAndStopVideo();
-        }
-    }
+}
 </script>
 
 </body>
